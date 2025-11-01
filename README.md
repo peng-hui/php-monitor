@@ -7,31 +7,31 @@ Traces PHP execution at the VM opcode level based on Witcher's https://github.co
 
 - **JIT Compiler:** Does NOT work with PHP JIT. JIT bypasses the VM opcode executor, so opcodes won't be traced. Disable JIT with `opcache.jit=0`?
 
-## Build
+- Each PHP line = multiple opcodes, so expect duplicates.
+
+## Installation
 ```bash
-chmod +x build.sh
-./build.sh
+phpize
+./configure
+make
+sudo make install
+```
+
+Add to `php.ini`:
+```ini
+extension=opcode_tracer.so
 ```
 
 ## Usage
 ```bash
-export SYMPHP_TRACE=/tmp/trace.log
-./sapi/cli/php script.php
+OPCODE_TRACE=/tmp/trace.log php script.php
 cat /tmp/trace.log
+```
+
+Remove consecutive duplicates:
+```bash
+uniq /tmp/trace.log
 ```
 
 ## Note
 
-Each PHP line becomes multiple opcodes, so you'll see duplicates:
-```
-script.php:5
-script.php:5
-script.php:5
-script.php:7
-script.php:7
-```
-
-**To remove consecutive duplicates:**
-```bash
-uniq /tmp/trace.log
-```
