@@ -3,16 +3,17 @@
 set -e
 
 # Clone PHP 7.3.3
-git clone https://github.com/php/php-src.git php-monitor
-cd php-monitor
-git checkout php-7.3.3
+git clone --depth 1 --branch  PHP-7.3.3 https://github.com/php/php-src.git php-src
+cd php-src
+git checkout PHP-7.3.3
 
 # Apply patch
 git apply ../zend_monitor.patch
 
 # Build
 ./buildconf --force
-./configure --enable-debug
+./configure 
+make clean
 make -j$(nproc)
 
 echo "Done! Test with:"
